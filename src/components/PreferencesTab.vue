@@ -1,21 +1,20 @@
 <template>
   <div class="container">
-      <h1>Select Preferences</h1>
-      <label>Nature vs City</label>
+    <h1>Select Preferences</h1>
+    <label>Nature vs City</label>
     <input type="range" min="0" max="100" v-model="natureVsCity" />
 
     <label>Budget (0 = Low, 4 = High)</label>
     <input type="range" min="0" max="4" v-model="budget" />
 
     <label>Cultural Interests</label>
-    <input type="range" min="0" max="100" v-model="culturalInterests"
-       />
+    <input type="range" min="0" max="100" v-model="culturalInterests" />
 
-      <br>
+    <br>
     <button @click="savePreferences">Save</button>
 
 
-    
+
   </div>
 </template>
 
@@ -46,7 +45,10 @@ export default {
 
 <style scoped>
 .container {
-  flex-direction: column; display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .container label {

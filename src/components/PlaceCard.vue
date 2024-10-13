@@ -1,16 +1,17 @@
 <template>
     <div class="card">
         <a :href="place.googleMapsUri">
-            <img :src="getPlacePhoto(place)" target="_blank" alt="Place Image" class="card-img" />
+            <img :src="placePhotoUrl" target="_blank" alt="Place Image" class="card-img" />
             <div class="place-details">
                 <h3>{{ place.displayName.text }}</h3>
                 <p v-if="place.primaryTypeDisplayName"><b> {{ place.primaryTypeDisplayName.text }}</b></p>
                 <p>{{ place.formattedAddress }}</p>
                 <p v-if="place.rating">Rating: {{ place.rating }} ({{ place.userRatingCount }} reviews)</p>
-                <p v-if="place.currentOpeningHours" class="open-status" :style="{backgroundColor:place.currentOpeningHours.openNow ? 'green' : 'red'}">
+                <p v-if="place.currentOpeningHours" class="open-status"
+                    :style="{ backgroundColor: place.currentOpeningHours.openNow ? 'green' : 'red' }">
                     {{ place.currentOpeningHours.openNow ? 'Open Now' : 'Closed' }}
                 </p>
-                <p v-else  class="open-status" :style="{backgroundColor:'gray'}">
+                <p v-else class="open-status" :style="{ backgroundColor: 'gray' }">
                     Unkown
                 </p>
             </div>
@@ -19,29 +20,39 @@
 </template>
 
 <script>
-const MAPS_API_KEY = 'AIzaSyC4cCmQZbKylUvOFhg0Fbh1qZPgchJuXzs';
-
 export default {
-    props: {
-        place: {
-            type: Object,
-            required: true
-        }
+    props: ['place'],
+    data() {
+        return {
+            placePhotoUrl: null, // Reactive property to store the photo URL
+        };
+    },
+    mounted() {
+        this.loadPlacePhoto();
     },
     methods: {
-        getPlacePhoto(place) {
+        async loadPlacePhoto() {
             try {
-                if (place.photos !== null && place.photos.length) {
-                return `https://places.googleapis.com/v1/${place.photos[0].name}/media?&key=${MAPS_API_KEY}&max_height_px=1000`;
-            }
-             // Fallback placeholder image if no photo available
+                if (this.place.photos && this.place.photos.length) {
+                    const photoReference = this.place.photos[0].name;
+
+                    // Call the backend to get the secure photo URL
+                    const response = await fetch(
+                        `http://localhost:3000/api/placePhoto?photoReference=${photoReference}`
+                    );
+                    const data = await response.json();
+                    this.placePhotoUrl = data.url; // Set the photo URL
+                } else {
+                    // Use a placeholder if no photo is available
+                    this.placePhotoUrl = 'https://via.placeholder.com/100';
+                }
             } catch (error) {
-                return "https://via.placeholder.com/100"; 
+                console.error('Error fetching place photo:', error);
+                this.placePhotoUrl = 'https://via.placeholder.com/100'; // Fallback
             }
-            
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style scoped>
