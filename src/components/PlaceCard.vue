@@ -1,21 +1,23 @@
 <template>
     <div class="card">
-        <a :href="place.googleMapsUri">
-            <img :src="placePhotoUrl" target="_blank" alt="Place Image" class="card-img" />
-            <div class="place-details">
-                <h3>{{ place.displayName.text }}</h3>
-                <p v-if="place.primaryTypeDisplayName"><b> {{ place.primaryTypeDisplayName.text }}</b></p>
-                <p>{{ place.formattedAddress }}</p>
-                <p v-if="place.rating">Rating: {{ place.rating }} ({{ place.userRatingCount }} reviews)</p>
-                <p v-if="place.currentOpeningHours" class="open-status"
-                    :style="{ backgroundColor: place.currentOpeningHours.openNow ? 'green' : 'red' }">
-                    {{ place.currentOpeningHours.openNow ? 'Open Now' : 'Closed' }}
+        <img :src="placePhotoUrl" target="_blank" alt="Place Image" class="card-img" />
+        <div class="place-details">
+            <h3>{{ place.name }}<a :href="place.mapsUri" target="_blank"
+                    class="material-symbols-outlined">open_in_new</a></h3>
+            <span class="spacer"></span>
+            <p v-if="place.type" class="type-name"> {{ place.type }}</p>
+
+            <span class="spacer"></span>
+            <p v-if="place.rating">Rating: {{ place.rating }} ({{ place.ratingCount }} reviews)</p>
+            <span class="spacer"></span>
+            <div class="card-bottom">
+                <p class="open-status" :style="{ backgroundColor: place.open ? 'green' : 'red' }">
+                    {{ place.open ? 'Open Now' : 'Closed' }}
                 </p>
-                <p v-else class="open-status" :style="{ backgroundColor: 'gray' }">
-                    Unkown
-                </p>
+                <span class="spacer"></span>
+                <p class="score"> {{ place.score }} </p>
             </div>
-        </a>
+        </div>
     </div>
 </template>
 
@@ -33,8 +35,8 @@ export default {
     methods: {
         async loadPlacePhoto() {
             try {
-                if (this.place.photos && this.place.photos.length) {
-                    const photoReference = this.place.photos[0].name;
+                if (this.place.photoRef) {
+                    const photoReference = this.place.photoRef;
 
                     // Call the backend to get the secure photo URL
                     const response = await fetch(
@@ -62,10 +64,11 @@ export default {
     border: none;
     border-radius: 8px;
     overflow: hidden;
-    width: 100%;
-    max-width: 600px;
+    width: 500px;
+    flex-grow: 1;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    background-color: #292929;
     /* Ensures the card stays in the flow when scaling */
     transform-origin: center;
 }
@@ -84,12 +87,17 @@ export default {
 }
 
 .place-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
     padding: 16px;
-    background-color: #292929;
 }
 
 .place-details h3 {
-    margin: 0 0 8px;
+    margin: 0;
+    display: flex;
     font-size: 1.2em;
 }
 
@@ -104,11 +112,25 @@ a {
 }
 
 .open-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 5px;
     padding-top: 5px !important;
     margin: 10px 0 0 0;
     width: fit-content;
     border-radius: 16px;
     height: 16px;
+}
+
+.type-name {
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.card-bottom {
+    display: flex;
+    width: 100%;
+    align-items: center;
 }
 </style>

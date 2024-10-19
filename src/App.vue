@@ -1,19 +1,21 @@
 <template>
   <div id="app">
-    <header class="app-header">
-      <h1 class="app-title">Travel Assistant</h1>
-    </header>
-    
     <nav class="app-nav">
-      <!-- Toggle between components with buttons -->
-      <button @click="showPreferences = false">On Trip</button>
-      <button @click="showPreferences = true">Preferences</button>
+      <span class="app-title">Travel Assistant</span>
+
+      <span class="spacer"></span>
+
+      <button @click="togglePreferences(false)" v-if="showPreferences">
+        Assistant
+      </button>
+      <button @click="togglePreferences(true)" v-else>
+        Preferences
+      </button>
     </nav>
 
     <main class="app-content">
-      <!-- Conditionally render components based on state -->
-      <OnTrip v-show="!showPreferences" />
-      <PreferencesTab v-show="showPreferences" />
+      <OnTrip v-show="!showPreferences" :preferences="preferences" />
+      <PreferencesTab v-show="showPreferences" :preferences="preferences" @update-preferences="updatePreferences" />
     </main>
 
     <footer class="app-footer">
@@ -34,8 +36,22 @@ export default {
   },
   data() {
     return {
-      showPreferences: false // Toggle between the two components
+      showPreferences: false, // Toggle between the two components
+      preferences: {
+        natureVsCity: "50",
+        budget: "2",
+        culturalInterests: "50",
+        resultCount: "3"
+      }
     };
+  },
+  methods: {
+    togglePreferences(value) {
+      this.showPreferences = value;
+    },
+    updatePreferences(newPreferences) {
+      this.preferences = { ...this.preferences, ...newPreferences };
+    }
   }
 };
 </script>
@@ -45,8 +61,8 @@ export default {
 html {
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', sans-serif;
-  background-color: #121212;
+  font-family: jetbrains mono;
+  background-color: #1C1C1C;
   color: #E0E0E0;
 }
 
@@ -60,44 +76,46 @@ body {
   min-height: 100vh;
 }
 
-.app-header {
-  background-color: #1F1F1F;
-  padding: 1rem;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+.app-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffffff;
 }
 
-.app-title {
-  color: #FFEB3B;
-  margin: 0;
+.spacer {
+  flex-grow: 1;
 }
 
 .app-nav {
+  height: 2em;
   background-color: #333;
   display: flex;
-  justify-content: center;
+  align-items: center;
   padding: 1rem;
   border-bottom: 1px solid #444;
 }
 
 button {
-  background-color: #FFEB3B;
-  color: #121212;
+  background: linear-gradient(90deg, #63ac58, #53caaa);
+  border-radius: 25px;
+  color: white;
   border: none;
   padding: 0.5rem 1rem;
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
   margin: 0 10px;
 }
 
 button:hover {
-  background-color: #FFC107;
+  opacity: 0.8;
 }
 
 .app-content {
   flex: 1;
-  padding: 2rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
   background-color: #121212;
 }
 

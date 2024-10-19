@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>Select Preferences</h1>
+    <h1>Preferences</h1>
     <label>Nature vs City</label>
     <input type="range" min="0" max="100" v-model="natureVsCity" />
 
@@ -9,35 +9,36 @@
 
     <label>Cultural Interests</label>
     <input type="range" min="0" max="100" v-model="culturalInterests" />
+    
+    <label>Result count</label>
+    <input type="range" min="1" max="5" v-model="resultCount" />
 
     <br>
     <button @click="savePreferences">Save</button>
-
-
-
   </div>
 </template>
 
 <script>
 export default {
+  props: ['preferences'],
   data() {
     return {
       natureVsCity: "50",
       budget: "2",
-      culturalInterests: "50"
+      culturalInterests: "50",
+      resultCount: "3"
     };
-  },
-  computed: {
   },
   methods: {
     savePreferences() {
       const preferences = {
         natureVsCity: this.natureVsCity,
         budget: this.budget,
-        culturalInterests: this.culturalInterests
+        culturalInterests: this.culturalInterests,
+        resultCount: this.resultCount
       };
       console.log(preferences)
-      localStorage.setItem('userPreferences', JSON.stringify(preferences));
+      this.$emit('update-preferences', preferences);
     }
   }
 };
