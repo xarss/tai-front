@@ -57,11 +57,6 @@ export default {
 </script>
 
 <style>
-:root {
-  --grad-a: #8CB369;
-  --grad-b: #5B8E7D;
-  --grad-c: #BC4B51;
-}
 
 html {
   margin: 0;

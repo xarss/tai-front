@@ -6,7 +6,7 @@
 
     <!--Answers List-->
     <div class="answers">
-      <AnswerRow v-for="answer in answers" :key="answer.id" :answer="answer" :resultCount="preferences.resultCount" />
+      <AnswerRow @update-loading="updateLoading" @add-answer="addAnswer" @delete-answer="deleteAnswer" v-for="answer in answers" :key="answer.id" :answer="answer" :resultCount="preferences.resultCount" />
     </div>
 
     <span v-if="answers.length > 0" class="spacer"></span>
@@ -20,7 +20,7 @@
       <div class="textarea-container">
         <textarea @input="resizeTextarea" ref="textarea" @keydown="handleKeyDown" class="bottom-textarea" rows="1"
           v-model="prompt" placeholder="Ask Assistant"></textarea>
-        <button @click="sendPrompt" class="run-button material-symbols-rounded">
+        <button @click="getPlaces" class="run-button material-symbols-rounded">
           play_arrow
         </button>
       </div>
@@ -29,7 +29,7 @@
       <div class="textarea-container">
         <textarea @input="resizeTextarea" ref="textarea" @keydown="handleKeyDown" class="bottom-textarea" rows="1"
           v-model="prompt" placeholder="Ask Assistant"></textarea>
-        <button @click="sendPrompt" class="run-button material-symbols-rounded">
+        <button @click="getPlaces" class="run-button material-symbols-rounded">
           play_arrow
         </button>
       </div>
@@ -64,19 +64,22 @@ export default {
     this.localPreferences = this.preferences;
   },
   methods: {
+    updateLoading(state) {
+      this.loading = state;
+    },
     handleKeyDown(event) {
       if (event.key === "Enter" && !event.shiftKey) {
         // Prevents a new line from being added
         event.preventDefault();
-        this.sendPrompt(); // Call sendPrompt if only Enter is pressed
+        this.getPlaces(); // Call getPlaces if only Enter is pressed
       }
     },
     resizeTextarea() {
       const textarea = this.$refs.textarea;
-      textarea.style.height = 'auto'; // Reset height to recalculate
-      textarea.style.height = `${textarea.scrollHeight - 20}px`; // Set new height
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight - 20}px`;
     },
-    async sendPrompt() {
+    async getPlaces() {
       this.loading = true;
       this.error = null;
       try {
@@ -93,7 +96,7 @@ export default {
           preferences: this.preferences
         };
 
-        const response = await axios.post('http://localhost:3000/api/sendPrompt', payload);
+        const response = await axios.post('http://localhost:3000/api/getPlaces', payload);
 
         this.answers.push(
           new Answer(this.prompt, response.data.message, response.data.places, response.data.success)
@@ -122,6 +125,12 @@ export default {
           }
         );
       });
+    },
+    deleteAnswer(answerId) {
+      this.answers = this.answers.filter(answer => answer.id !== answerId);
+    },
+    addAnswer(answer) {
+      this.answers.push(answer);
     }
   }
 };
@@ -205,7 +214,7 @@ textarea:focus {
   width: 50px;
   height: 50px;
   border: 6px solid #333;
-  border-top: 6px solid var(--grad-a);
+  border-top: 6px solid #F7F7FF;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }

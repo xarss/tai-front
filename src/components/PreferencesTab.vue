@@ -37,7 +37,6 @@ export default {
         culturalInterests: this.culturalInterests,
         resultCount: this.resultCount
       };
-      console.log(preferences)
       this.$emit('update-preferences', preferences);
     }
   }

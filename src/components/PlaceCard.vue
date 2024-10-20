@@ -12,16 +12,20 @@
             <span class="spacer"></span>
             <div class="card-bottom">
                 <p class="open-status" :style="{ backgroundColor: place.open ? 'green' : 'red' }">
-                    {{ place.open ? 'Open Now' : 'Closed' }}
+                    {{ place.open ? 'Open' : 'Closed' }}
                 </p>
                 <span class="spacer"></span>
-                <p class="score"> {{ place.score }} </p>
+                <button @click="generateOverview">Overview</button>
+                <!-- <p class="score"> {{ place.score }} </p> -->
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import Answer from '@/classes/Answer';
+import axios from 'axios';
+
 export default {
     props: ['place'],
     data() {
@@ -53,6 +57,19 @@ export default {
                 this.placePhotoUrl = 'https://via.placeholder.com/100'; // Fallback
             }
         },
+        async generateOverview() {
+            this.$emit("update-loading", true);
+            try {
+                const response = await axios.post('http://localhost:3000/api/getPlaceOverview', { place: this.place });
+
+                this.$emit("add-answer", new Answer(`Generate overview for ${this.place.name}`, response.data.message, [], response.data.success));
+            } catch (err) {
+                this.$emit("add-answer", new Answer(this.prompt, "Something went wrong", [], false));
+                console.log(err.response.data);
+            } finally {
+                this.$emit("update-loading", false);
+            }
+        },
     },
 };
 </script>
@@ -75,9 +92,7 @@ export default {
 
 .card:hover {
     transform: scale(1.05);
-    /* Increases size by 5% */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    /* Slightly deeper shadow on hover */
 }
 
 .card-img {
