@@ -6,7 +6,8 @@
 
     <!--Answers List-->
     <div class="answers">
-      <AnswerRow @update-loading="updateLoading" @add-answer="addAnswer" @delete-answer="deleteAnswer" v-for="answer in answers" :key="answer.id" :answer="answer" :resultCount="preferences.resultCount" />
+      <AnswerRow @update-loading="updateLoading" @add-answer="addAnswer" @delete-answer="deleteAnswer"
+        v-for="answer in answers" :key="answer.id" :answer="answer" :resultCount="preferences.resultCount" />
     </div>
 
     <span v-if="answers.length > 0" class="spacer"></span>
@@ -40,7 +41,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { fetchPlaces } from '@/services/placesService';
 import AnswerRow from './AnswerRow.vue';
 import Answer from '@/classes/Answer';
 
@@ -95,17 +96,15 @@ export default {
           longitude: position ? position.longitude : null,
           preferences: this.preferences
         };
-
-        const response = await axios.post('http://localhost:3000/api/getPlaces', payload);
+        const data = await fetchPlaces(payload);
 
         this.answers.push(
-          new Answer(this.prompt, response.data.message, response.data.places, response.data.success)
+          new Answer(this.prompt, data.message, data.places, data.success)
         )
       } catch (err) {
         this.answers.push(
           new Answer(this.prompt, "Something went wrong", [], false)
         )
-        console.log(err.response.data);
       } finally {
         this.loading = false;
         this.prompt = "";
@@ -115,6 +114,7 @@ export default {
       return new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(
           (position) => {
+            console.log(position)
             resolve({
               latitude: position.coords.latitude,
               longitude: position.coords.longitude

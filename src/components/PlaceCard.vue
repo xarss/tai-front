@@ -24,7 +24,7 @@
 
 <script>
 import Answer from '@/classes/Answer';
-import axios from 'axios';
+import { fetchPlaceOverview, fetchPlacePhoto } from '@/services/placesService';
 
 export default {
     props: ['place'],
@@ -40,32 +40,25 @@ export default {
         async loadPlacePhoto() {
             try {
                 if (this.place.photoRef) {
-                    const photoReference = this.place.photoRef;
+                    const data = await fetchPlacePhoto(this.place.photoRef)
 
-                    // Call the backend to get the secure photo URL
-                    const response = await fetch(
-                        `http://localhost:3000/api/placePhoto?photoReference=${photoReference}`
-                    );
-                    const data = await response.json();
                     this.placePhotoUrl = data.url; // Set the photo URL
                 } else {
                     // Use a placeholder if no photo is available
                     this.placePhotoUrl = 'https://via.placeholder.com/100';
                 }
             } catch (error) {
-                console.error('Error fetching place photo:', error);
                 this.placePhotoUrl = 'https://via.placeholder.com/100'; // Fallback
             }
         },
         async generateOverview() {
             this.$emit("update-loading", true);
             try {
-                const response = await axios.post('http://localhost:3000/api/getPlaceOverview', { place: this.place });
+                const data = await fetchPlaceOverview(this.place);
 
-                this.$emit("add-answer", new Answer(`Generate overview for ${this.place.name}`, response.data.message, [], response.data.success));
+                this.$emit("add-answer", new Answer(`Generate overview for ${this.place.name}`, data.message, [], data.success));
             } catch (err) {
                 this.$emit("add-answer", new Answer(this.prompt, "Something went wrong", [], false));
-                console.log(err.response.data);
             } finally {
                 this.$emit("update-loading", false);
             }
