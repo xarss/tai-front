@@ -3,7 +3,7 @@
         <img :src="placePhotoUrl" target="_blank" alt="Place Image" class="card-img" />
         <div class="place-details">
             <h3>{{ place.name }}<a :href="place.mapsUri" target="_blank"
-                    class="material-symbols-outlined">open_in_new</a></h3>
+                    class="material-symbols-rounded">open_in_new</a></h3>
             <span class="spacer"></span>
             <p v-if="place.type" class="type-name"> {{ place.type }}</p>
 

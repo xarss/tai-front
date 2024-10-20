@@ -20,7 +20,7 @@
       <div class="textarea-container">
         <textarea @input="resizeTextarea" ref="textarea" @keydown="handleKeyDown" class="bottom-textarea" rows="1"
           v-model="prompt" placeholder="Ask Assistant"></textarea>
-        <button @click="sendPrompt" class="run-button material-symbols-outlined">
+        <button @click="sendPrompt" class="run-button material-symbols-rounded">
           play_arrow
         </button>
       </div>
@@ -29,7 +29,7 @@
       <div class="textarea-container">
         <textarea @input="resizeTextarea" ref="textarea" @keydown="handleKeyDown" class="bottom-textarea" rows="1"
           v-model="prompt" placeholder="Ask Assistant"></textarea>
-        <button @click="sendPrompt" class="run-button material-symbols-outlined">
+        <button @click="sendPrompt" class="run-button material-symbols-rounded">
           play_arrow
         </button>
       </div>
@@ -138,7 +138,7 @@ export default {
   border-radius: 10px;
   border: none;
   background-color: #333;
-  color: white;
+  color: #F7F7FF;
   font-size: xx-large;
 }
 
@@ -150,7 +150,7 @@ export default {
   border-radius: 1.5em;
   border: none;
   background-color: #333;
-  color: white;
+  color: #F7F7FF;
   font-size: xx-large;
 }
 
@@ -205,7 +205,7 @@ textarea:focus {
   width: 50px;
   height: 50px;
   border: 6px solid #333;
-  border-top: 6px solid #4d9a6e;
+  border-top: 6px solid var(--grad-a);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -249,7 +249,7 @@ textarea:focus {
   border-radius: 1.5em;
   border: none;
   background-color: #333;
-  color: white;
+  color: #F7F7FF;
   font-size: xx-large;
 }
 
@@ -258,7 +258,8 @@ textarea:focus {
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  background-color: #4d9a6e;
+  background: #F7F7FF;
+  color: #333;
   border: none;
   border-radius: 50%;
   width: 35px;
@@ -268,16 +269,12 @@ textarea:focus {
   justify-content: center;
   cursor: pointer;
   font-size: 20px;
-  color: white;
   outline: none;
   margin: 0;
+  transition: opacity 0.5s;
 }
 
 .run-button:hover {
-  background-color: #3b7f5a;
-}
-
-.run-button:active {
-  background-color: #2e6647;
+  opacity: 0.7;
 }
 </style>

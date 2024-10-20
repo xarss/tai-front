@@ -57,13 +57,18 @@ export default {
 </script>
 
 <style>
-/* Dark Theme and Modern Look */
+:root {
+  --grad-a: #8CB369;
+  --grad-b: #5B8E7D;
+  --grad-c: #BC4B51;
+}
+
 html {
   margin: 0;
   padding: 0;
   font-family: jetbrains mono;
   background-color: #1C1C1C;
-  color: #E0E0E0;
+  color: #F7F7FF;
 }
 
 body {
@@ -79,7 +84,7 @@ body {
 .app-title {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #ffffff;
+  color: #F7F7FF;
 }
 
 .spacer {
@@ -96,10 +101,12 @@ body {
 }
 
 button {
-  background: linear-gradient(90deg, #63ac58, #53caaa);
+  background: #F7F7FF;
   border-radius: 25px;
-  color: white;
+  color: #333;
   border: none;
+  font-family: jetbrains mono;
+  font-weight: bolder;
   padding: 0.5rem 1rem;
   cursor: pointer;
   font-size: 1rem;
