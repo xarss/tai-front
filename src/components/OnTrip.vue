@@ -14,6 +14,9 @@
 
     <!--Textboxes-->
     <div v-if="answers.length === 0" class="questions-container">
+      <div class="main-img-container">
+        <img src="../../public/android-chrome-512x512.png" alt="favico" class="main-img">
+      </div>
       <h1>What is your question?</h1>
       <label style="font-size: larger;">
         <input type="checkbox" v-model="useCurrentLocation" /> Use Current Location
@@ -103,18 +106,21 @@ export default {
         )
       } catch (err) {
         this.answers.push(
-          new Answer(this.prompt, "Something went wrong", [], false)
+          new Answer(this.prompt, err.message, [], false)
         )
       } finally {
         this.loading = false;
         this.prompt = "";
       }
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth'
+      });
     },
     getCurrentLocation() {
       return new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            console.log(position)
             resolve({
               latitude: position.coords.latitude,
               longitude: position.coords.longitude

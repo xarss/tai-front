@@ -4,9 +4,8 @@ module.exports = defineConfig({
   transpileDependencies: true,
   chainWebpack: (config) => {
     config.plugin('html').tap((args) => {
-      args[0].title = 'Travel Assitant';
+      args[0].title = 'TravelAI';
       return args;
     });
   },
 });
-

@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <nav class="app-nav">
-      <span class="app-title">Travel Assistant</span>
+
+      <span class="app-title"> TravelAI </span>
 
       <span class="spacer"></span>
 
@@ -57,7 +58,6 @@ export default {
 </script>
 
 <style>
-
 html {
   margin: 0;
   padding: 0;
@@ -74,6 +74,17 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+}
+
+.main-img-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2em 0;
+}
+
+.main-img {
+  width: 200px;
 }
 
 .app-title {
